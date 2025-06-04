@@ -1,5 +1,8 @@
 import "../styles/settings.css";
+import { isValidEmail } from "../utils/validations.js";
+import { sendUpdate } from "../utils/api.js";
 
+// //////////////////////////////////////////////////////////////////
 // 1. Utility functions
 function addplaceholders(){
   $$("firstname").define("placeholder", "Bhashitha");
@@ -9,6 +12,17 @@ function addplaceholders(){
   $$("email").define("placeholder", "Bhashitha@gmail.com");
   $$("email").refresh();
 }
+
+function setInitialValues() {
+  $$("firstname").setValue("Bhashitha");
+  $$("lastname").setValue("Viduranga");
+  $$("email").setValue("Bhashitha@gmail.com");
+
+  $$("firstname").define("readonly", true);
+  $$("lastname").define("readonly", true);
+  $$("email").define("readonly", true);
+}
+/////////////////////////////////////////////////////////////////////
 
 function isMobile() {
   return window.innerWidth < 768;
@@ -20,6 +34,21 @@ function getTabHeader(iconClass, label) {
   } else {
     return `<span class='webix_icon ${iconClass}'></span> ${label}`;
   }
+}
+
+export async function saveFormData(formId, url, validateFn) {
+  const form = $$(formId);
+  const values = form.getValues();
+
+  console.log("Form values to save:", values);
+
+  // Validate if validation function is provided
+  if (validateFn && !validateFn(values)) {
+    return Promise.reject("Validation failed");
+  }
+
+  // Send the data to backend
+  return sendUpdate(url, values);
 }
 
 function editableField(label, id) {
@@ -70,9 +99,68 @@ function createTabview() {
           view: "form",
           id: "accountForm",
           elements: [
-            editableField("First Name", "firstname"),
-            editableField("Last Name", "lastname"),
-            editableField("Email", "email")
+            {view: "template", template: "Profile Informations", type: "section", css: "section-header"},
+            {cols:[
+              { margin: 10,
+                gravity: 3,
+                rows:[
+                editableField("First Name", "firstname"),
+                editableField("Last Name", "lastname"),
+                editableField("Email", "email")
+              ]},
+              {
+                rows: [
+                  {
+                    margin: 10,
+                    view: "template",
+                    id: "imagePreview",
+                    template: `
+                      <div class="profile-picture-container">
+                        <img class="profile-picture" id="profileImage" src="src/assets/img/user.jpg" alt="Profile Picture">
+                      </div>
+                    `,
+                    height: 170
+                  },
+                  {
+                    view: "uploader",
+                    value: "Change Photo",
+                    name: "photo",
+                    accept: "image/png, image/jpeg",
+                    autosend: false, // disable auto-upload
+                    on: {
+                      onBeforeFileAdd: function (upload) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                          const imgEl = document.getElementById("profileImage");
+                          imgEl.src = e.target.result; // Show preview
+                        };
+                        reader.readAsDataURL(upload.file);
+                        return false; // stop actual upload
+                      }
+                    }
+                  },
+                  
+                ]
+              },
+              {}
+            ]},
+            {
+              view: "button",
+              value: "Save Changes",
+              type: "form",
+              css: "save-button",
+              click: function () {
+              saveFormData("accountForm", "http://localhost:8000/api/user/update", isValidEmail)
+                .then(() => {
+                  webix.message("Changes saved successfully!");
+                })
+                .catch(err => {
+                  if (err !== "Validation failed") {
+                    webix.message({ type: "error", text: "Failed to save changes: " + err });
+                  }
+                });
+              }
+            }
           ]
         },
       },
@@ -103,6 +191,7 @@ webix.ui({
   ]
 });
 addplaceholders();
+setInitialValues();
 
 // 4. Handle resize (rebuild only tabview)
 window.addEventListener("resize", () => {

@@ -7,3 +7,27 @@
 .fas:before{
     color: #1CA1C1;
 }
+.section-header {
+  /* font-size: 40px; */
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.webix_section > .webix_template {
+    font-size: 20px;
+}
+.profile-picture-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 5px;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* makes it a circle */
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
