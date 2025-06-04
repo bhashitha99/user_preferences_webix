@@ -1,0 +1,18 @@
+.main_toolbar{
+    background-color: #fff;
+    border: rgb(208, 204, 204) solid 1px;
+}
+
+.toobal_icon .webix_icon {
+  color: black ;
+  opacity: 0.8;
+}
+
+
+/* .webix_sidebar .webix_tree_item.webix_selected,
+.webix_sidebar .webix_tree_item.webix_selected span {
+    background-color: #f0f0f0 ;
+    color: #000 ;
+    font-weight: 500;
+    box-shadow: none !important;
+} */
