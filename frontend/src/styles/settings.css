@@ -41,3 +41,82 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+
+
+.theme-label{
+  font-size: 18px;
+  padding-top: 13px;
+  /* text-align: center; */
+  justify-content: center;
+  height: 100%;
+  width: 80%;
+}
+
+.theme-select {
+  /* padding: 10px; */
+  cursor: pointer;
+  text-align: center;
+}
+
+.theme-card {
+  width: 80%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+  color: #fff;
+}
+
+.theme-card:hover {
+  transform: scale(1.1);
+}
+
+.theme-card.flat {
+  background: #3498db;         /* Blue - Flat UI */
+  color: #fff;
+}
+
+.theme-card.material {
+  background: #009688;         /* Teal - Material Design */
+  color: #fff;
+}
+
+.theme-card.contrast {
+  background: #e91e63;         /* Pinkish-red for high contrast */
+  color: #fff;
+}
+
+.theme-card.dark {
+  background: #1e1e2f;         /* Deep navy for dark theme */
+  color: #fff;
+}
+
+
+.font-label{
+  font-size: 18px;
+  padding-top: 13px;
+  /* text-align: center;
+  justify-content: center; */
+  height: 100%;
+  width: 80%;
+}
+
+.font-card-small,
+.font-card-medium,
+.font-card-large {
+  width: 80%;
+  padding: 10px;
+  margin: 5px;
+  text-align: center;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.font-card-small:hover,
+.font-card-medium:hover,
+.font-card-large:hover {
+  background-color: #ddd;
+}

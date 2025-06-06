@@ -1,6 +1,5 @@
 import "../styles/settings.css";
 import { sendUpdate } from "../utils/api.js";
-import { isValidPassword, isValidEmail } from "../utils/validations.js";
 import { boxWithEditPermission,boxWithoutEditPermission,editpassword } from "../components/formFields.js";
 
 export async function saveFormData(formId, url, validateFn) {
@@ -164,8 +163,8 @@ export function getNotificationSettingsTab(){
                             id: "dndTimeRange",
                             hidden: true,
                             rows: [
-                            boxWithoutEditPermission("From", "dndFrom", "datepicker", "", 100, 200),
-                            boxWithoutEditPermission("To", "dndTo", "datepicker", "", 100, 200),
+                            boxWithoutEditPermission("From", "dndFrom", "timepicker", "", 100, 200),
+                            boxWithoutEditPermission("To", "dndTo", "timepicker", "", 100, 200),
                             {}
                             ]
                         }

@@ -15,6 +15,11 @@ function getTabHeader(iconClass, label) {
   }
 }
 
+// Responsive layout
+function responsiveLayout(items) {
+  return isMobile() ? { rows: items } : { cols: items };
+}
+
 export async function saveFormData(formId, url, validateFn) {
   const form = $$(formId);
   const values = form.getValues();
@@ -28,10 +33,6 @@ export async function saveFormData(formId, url, validateFn) {
 }
 
 
-// Responsive layout
-function responsiveLayout(items) {
-  return isMobile() ? { rows: items } : { cols: items };
-}
 
 export function getProfileSettingsTab() {
     return{

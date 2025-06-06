@@ -5,6 +5,8 @@ import { boxWithEditPermission,boxWithoutEditPermission,editpassword } from "../
 import {getProfileSettingsTab} from "./profileSettingsTab.js";
 import {getNotificationSettingsTab} from "./notificationSettingsTab.js";
 import {getPrivacySettingsTab} from "./privacySettingsTab.js";
+import {getThemeSettingsTab} from "./themeSettingsTab.js";
+import { navbar } from "../components/navbar.js";
 
 // //////////////////////////////////////////////////////////////////
 // 1. Utility functions
@@ -32,13 +34,6 @@ function isMobile() {
   return window.innerWidth < 768;
 }
 
-function getTabHeader(iconClass, label) {
-  if (isMobile()) {
-    return `<span class='webix_icon ${iconClass}'></span>`;
-  } else {
-    return `<span class='webix_icon ${iconClass}'></span> ${label}`;
-  }
-}
 
 export async function saveFormData(formId, url, validateFn) {
   const form = $$(formId);
@@ -58,25 +53,26 @@ function createTabview() {
     view: "tabview",
     id: "mainTabview",
     cells: [
+      getThemeSettingsTab(),
       getPrivacySettingsTab(),
       getProfileSettingsTab(),
       getNotificationSettingsTab(),
-      {
-        header: getTabHeader("fas fa-solid fa-palette", "Theme Settings"),
-        body: { template: "About the app" },
-      },
     ],
   };
 }
 
 // Main layout
 webix.ui({
-  cols: [
-    {
-      rows: [
-        createTabview() // insert the tabview initially
-      ]
-    }
+  rows:[
+    navbar(),
+    {cols: [
+      {
+        rows: [
+          createTabview() // insert the tabview initially
+        ]
+      }
+    ]}
+
   ]
 });
 addplaceholders();

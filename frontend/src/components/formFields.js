@@ -52,8 +52,12 @@ export function boxWithoutEditPermission(label, id, viewType = "text", options_v
   if (viewType === "combo" || viewType === "select") {
     field.options = options_val;
   }
-  if( viewType === "switch") {
+  else if( viewType === "switch") {
     field.value = options_val; 
+  }
+  else if (viewType === "timepicker") {
+    field.view = 'datepicker';
+    field.type = 'time';
   }
   if (inputWidth) {
     field.inputWidth = labelWidth+inputWidth;
