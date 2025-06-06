@@ -31,3 +31,13 @@
   object-fit: cover;
   border: 2px solid #ccc;
 }
+
+.save-button{
+  margin-top: 20px;
+  width: 100px;
+  height: 40px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
