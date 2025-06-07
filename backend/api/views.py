@@ -8,7 +8,8 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework import status
-from .serializers import RegisterSerializer,UserProfileSerializer,ChangePasswordSerializer
+from .serializers import RegisterSerializer,UserProfileSerializer,ChangePasswordSerializer,UserNotificationSettingSerializer,UserPrivacySettingSerializer
+from .models import UserNotificationSetting
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveUpdateAPIView
 from django.views.decorators.csrf import csrf_exempt
@@ -66,3 +67,18 @@ class ChangePasswordView(APIView):
             return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserNotificationSettingView(RetrieveUpdateAPIView):
+    serializer_class = UserNotificationSettingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        settings, created = UserNotificationSetting.objects.get_or_create(user=self.request.user)
+        return settings
+    
+class UserPrivacySettingView(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserPrivacySettingSerializer
+
+    def get_object(self):
+        return self.request.user.privacy_setting

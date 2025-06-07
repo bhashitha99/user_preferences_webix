@@ -1,7 +1,7 @@
 # api/serializers.py
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import UserProfile
+from .models import UserProfile,UserNotificationSetting, UserPrivacySetting
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -62,3 +62,15 @@ class ChangePasswordSerializer(serializers.Serializer):
         if data['newPassword'] != data['confirmPassword']:
             raise serializers.ValidationError("New password and confirm password do not match.")
         return data
+    
+class UserNotificationSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserNotificationSetting
+        fields = '__all__'
+        read_only_fields = ['user']
+
+class UserPrivacySettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPrivacySetting
+        fields = '__all__'
+        read_only_fields = ['user']
