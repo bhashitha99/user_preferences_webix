@@ -25,9 +25,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    firstname = serializers.CharField(source='user.first_name', read_only=True)
+    lastname = serializers.CharField(source='user.last_name', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
     class Meta:
         model = UserProfile
-        fields = ['phone', 'gender', 'birthday', 'address','maritalstatus','job','city','country']
+        fields = ['phone', 'gender', 'birthday', 'address','maritalstatus',
+                  'job','city','country','firstname', 'lastname', 'email']
 
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
@@ -48,3 +52,13 @@ class UserSerializer(serializers.ModelSerializer):
         profile.save()
 
         return instance
+    
+class ChangePasswordSerializer(serializers.Serializer):
+    oldPassword = serializers.CharField(required=True)
+    newPassword = serializers.CharField(required=True)
+    confirmPassword = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['newPassword'] != data['confirmPassword']:
+            raise serializers.ValidationError("New password and confirm password do not match.")
+        return data
