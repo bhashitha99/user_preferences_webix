@@ -28,7 +28,16 @@ function changeFontSize(size) {
 function changeFontFamily(fontName) {
   document.documentElement.style.setProperty("--user-font-family", fontName);
 }
+function toggleContrastMode() {
+  document.body.classList.toggle("high-contrast");
 
+  // save preference
+  const enabled = document.body.classList.contains("high-contrast");
+  localStorage.setItem("highContrast", enabled);
+}
+if (localStorage.getItem("highContrast") === "true") {
+  document.body.classList.add("high-contrast");
+}
 
 function switchTheme(themeName) {
   const themeLink = document.getElementById("webix-theme");
@@ -208,6 +217,25 @@ export function getThemeSettingsTab() {
                 },
               ],
             },
+
+            {
+              view: "switch",
+              label: "High Contrast Mode",
+              labelWidth: 200,
+              value: localStorage.getItem("highContrast") === "true" ? 1 : 0,
+              on: {
+                onChange: function (newValue) {
+                  const enabled = newValue === 1;
+                  if (enabled) {
+                    document.body.classList.add("high-contrast");
+                  } else {
+                    document.body.classList.remove("high-contrast");
+                  }
+                  localStorage.setItem("highContrast", enabled);
+                },
+              },
+            },
+
             { height: 100 },
           ],
         },

@@ -124,6 +124,34 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+
+
+
+
+body, .webix_view ,.webix_inp_label{
+  font-size: var(--user-font-size, 16px) !important;
+  font-family: var(--user-font-family, "Arial") !important;
+}
+
+.high-contrast {
+  --bg-color: #000 !important;
+  --text-color: #fff !important;
+  --accent-color: #ffff00 !important;
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+.high-contrast .webix_view {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.high-contrast .webix_button {
+  background-color: var(--accent-color) !important;
+  color: #000 !important;
+}
+
 .font-card-arial,
 .font-card-roboto,
 .font-card-monospace {
@@ -134,7 +162,7 @@
   cursor: pointer;
   transition: 0.2s ease;
   border: 2px solid #ccc;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 .font-card-arial:hover,
@@ -144,10 +172,3 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-
-
-
-body, .webix_view ,.webix_inp_label{
-  font-size: var(--user-font-size, 16px) !important;
-  font-family: var(--user-font-family, "Arial") !important;
-}
