@@ -23,8 +23,12 @@ function getTabHeader(iconClass, label) {
 }
 
 function changeFontSize(size) {
-  document.body.style.fontSize = size;
+  document.documentElement.style.setProperty("--user-font-size", size);
 }
+function changeFontFamily(fontName) {
+  document.documentElement.style.setProperty("--user-font-family", fontName);
+}
+
 
 function switchTheme(themeName) {
   const themeLink = document.getElementById("webix-theme");
@@ -67,6 +71,7 @@ export function getThemeSettingsTab() {
                       view: "template",
                       template: `<div class="theme-card flat">Flat</div>`,
                       css: "theme-select",
+                      height: 50,
                       borderless: true,
                       onClick: {
                         "theme-card": function () {
@@ -78,6 +83,7 @@ export function getThemeSettingsTab() {
                       view: "template",
                       template: `<div class="theme-card material">Material</div>`,
                       css: "theme-select",
+                      height: 50,
                       borderless: true,
                       onClick: {
                         "theme-card": function () {
@@ -89,6 +95,7 @@ export function getThemeSettingsTab() {
                       view: "template",
                       template: `<div class="theme-card contrast">Contrast</div>`,
                       css: "theme-select",
+                      height: 50,
                       borderless: true,
                       onClick: {
                         "theme-card": function () {
@@ -100,6 +107,7 @@ export function getThemeSettingsTab() {
                       view: "template",
                       template: `<div class="theme-card dark">Dark</div>`,
                       css: "theme-select",
+                      height: 60,
                       borderless: true,
                       onClick: {
                         "theme-card": function () {
@@ -107,25 +115,23 @@ export function getThemeSettingsTab() {
                         },
                       },
                     },
-
-                    // boxWithEditPermission("Theme Color", "themeColor"),
-                    // boxWithEditPermission("Font Size", "fontSize"),
-                    // boxWithEditPermission("Background Image", "backgroundImage"),
                   ]),
                 },
                 {
                   ...responsiveLayout([
                     {
+                      margin: 10,
                       view: "template",
                       type: "clean",
                       template: "Font Size",
-                      height: 40,
+                      height: 50,
                       css: "font-label",
                     },
                     {
                       view: "template",
                       template: `<div class="font-card-small">Small</div>`,
                       borderless: true,
+                      height: 50,
                       onClick: {
                         "font-card-small": function () {
                           changeFontSize("14px");
@@ -136,6 +142,7 @@ export function getThemeSettingsTab() {
                       view: "template",
                       template: `<div class="font-card-medium">Medium</div>`,
                       borderless: true,
+                      height: 50,
                       onClick: {
                         "font-card-medium": function () {
                           changeFontSize("16px");
@@ -146,9 +153,54 @@ export function getThemeSettingsTab() {
                       view: "template",
                       template: `<div class="font-card-large">Large</div>`,
                       borderless: true,
+                      height: 50,
                       onClick: {
                         "font-card-large": function () {
                           changeFontSize("18px");
+                        },
+                      },
+                    },
+                  ]),
+                },
+                {
+                  ...responsiveLayout([
+                    {
+                      view: "template",
+                      type: "clean",
+                      template: "Font Family",
+                      height: 50,
+                      css: "font-label",
+                    },
+                    {
+                      view: "template",
+                      template: `<div class="font-card-arial">Arial</div>`,
+                      borderless: true,
+                      height: 50,
+                      onClick: {
+                        "font-card-arial": function () {
+                          changeFontFamily("Arial");
+                        },
+                      },
+                    },
+                    {
+                      view: "template",
+                      template: `<div class="font-card-roboto">Roboto</div>`,
+                      borderless: true,
+                      height: 50,
+                      onClick: {
+                        "font-card-roboto": function () {
+                          changeFontFamily("Roboto, sans-serif");
+                        },
+                      },
+                    },
+                    {
+                      view: "template",
+                      template: `<div class="font-card-monospace">Monospace</div>`,
+                      borderless: true,
+                      height: 50,
+                      onClick: {
+                        "font-card-monospace": function () {
+                          changeFontFamily("monospace");
                         },
                       },
                     },

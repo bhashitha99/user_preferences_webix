@@ -108,15 +108,46 @@
 .font-card-large {
   width: 80%;
   padding: 10px;
-  margin: 5px;
+  /* margin: 5px; */
   text-align: center;
-  background-color: #f0f0f0;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s ease;
+  border: 2px solid #ccc; /* Light gray border */
 }
+
+/* Optional hover effect */
 .font-card-small:hover,
 .font-card-medium:hover,
 .font-card-large:hover {
-  background-color: #ddd;
+  border-color: #3498db; /* Highlight color on hover */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.font-card-arial,
+.font-card-roboto,
+.font-card-monospace {
+  width: 80%;
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  border: 2px solid #ccc;
+  font-weight: 600;
+}
+
+.font-card-arial:hover,
+.font-card-roboto:hover,
+.font-card-monospace:hover {
+  border-color: #3498db;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+
+
+
+body, .webix_view ,.webix_inp_label{
+  font-size: var(--user-font-size, 16px) !important;
+  font-family: var(--user-font-family, "Arial") !important;
 }
