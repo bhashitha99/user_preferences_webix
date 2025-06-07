@@ -53,39 +53,57 @@ function createTabview() {
     view: "tabview",
     id: "mainTabview",
     cells: [
-      getThemeSettingsTab(),
-      getPrivacySettingsTab(),
       getProfileSettingsTab(),
       getNotificationSettingsTab(),
+      getPrivacySettingsTab(),
+      getThemeSettingsTab(),
     ],
   };
 }
 
 // Main layout
-webix.ui({
-  rows:[
-    navbar(),
-    {cols: [
+export function settingsPage() {
+  const layout = {
+    rows: [
+      navbar(),
       {
-        rows: [
-          createTabview() // insert the tabview initially
-        ]
-      }
-    ]}
+        cols: [
+          {
+            rows: [createTabview()],
+          },
+        ],
+      },
+    ],
+  };
 
-  ]
-});
-addplaceholders();
-setInitialValues();
+  // Delay layout enhancements slightly after render
+  setTimeout(() => {
+    addplaceholders();
+    setInitialValues();
+
+    // Handle resize to rebuild tabview
+    window.addEventListener("resize", () => {
+      const parent = $$("mainTabview")?.getParentView();
+      if (parent) {
+        const index = parent.index($$("mainTabview"));
+        parent.removeView("mainTabview");
+        parent.addView(createTabview(), index);
+        addplaceholders();
+      }
+    });
+  }, 0);
+
+  return layout;
+}
 
 // Handle resize (rebuild only tabview)
-window.addEventListener("resize", () => {
-  const parent = $$("mainTabview").getParentView();
-  const index = parent.index($$("mainTabview"));
-  parent.removeView("mainTabview"); // remove old
-  parent.addView(createTabview(), index); // insert new at same position
-  addplaceholders();
-});
+// window.addEventListener("resize", () => {
+//   const parent = $$("mainTabview").getParentView();
+//   const index = parent.index($$("mainTabview"));
+//   parent.removeView("mainTabview"); // remove old
+//   parent.addView(createTabview(), index); // insert new at same position
+//   addplaceholders();
+// });
 
 // // Responsive layout
 // function responsiveLayout(items) {
