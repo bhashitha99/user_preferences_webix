@@ -59,7 +59,7 @@ pip install -r requirements.txt
 ```
 #### Configure Environment:
 
-Rename EXAMPLE.env to .env in the backend folder
+Rename .EXAMPLE to .env in the backend folder
 Add your frontend URL (e.g., http://localhost:5173) to FRONTEND_URL
 ```bash
 python manage.py migrate
@@ -71,7 +71,7 @@ cd ../frontend
 npm install
 ````
 #### Configure Environment:
-Rename EXAMPLE.env to .env in the frontend folder
+Rename .EXAMPLE to .env in the frontend folder
 Add your backend URL (e.g., http://localhost:8000) to VITE_API_URL
 ### Run the App
 ```bash
