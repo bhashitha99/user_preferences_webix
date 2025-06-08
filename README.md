@@ -34,9 +34,6 @@ A customizable **User Preferences Page** built using **Webix** (Frontend) and **
 
 - Node.js v16+
 - Python 3.8+
-- Django 4+
-- Webpack / Parcel (for frontend bundling)
-- Webix Pro or CDN access
 
 ---
 
