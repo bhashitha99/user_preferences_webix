@@ -1,11 +1,5 @@
 import "../styles/settings.css";
 import { sendUpdate } from "../utils/api.js";
-import { isValidPassword, isValidEmail } from "../utils/validations.js";
-import {
-  boxWithEditPermission,
-  boxWithoutEditPermission,
-  editpassword,
-} from "../components/formFields.js";
 import { getProfileSettingsTab } from "./profileSettingsTab.js";
 import { getNotificationSettingsTab } from "./notificationSettingsTab.js";
 import { getPrivacySettingsTab } from "./privacySettingsTab.js";
@@ -15,9 +9,6 @@ import { fetchData } from "../utils/api.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function isMobile() {
-  return window.innerWidth < 768;
-}
 
 export async function saveFormData(formId, url, validateFn) {
   const form = $$(formId);

@@ -1,4 +1,5 @@
 const token = localStorage.getItem("authToken");
+
 export async function sendUpdate(url, data, options = {}) {
   try {
     const response = await fetch(url, {

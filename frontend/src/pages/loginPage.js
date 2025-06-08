@@ -1,6 +1,7 @@
 import { settingsPage } from "./settings.js";
 import { signupPage } from "./signupPage.js";
 import "../styles/login.css";
+import { loadSavedThemeSettings } from "../pages/themeSettingsTab.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -74,7 +75,7 @@ export function loginPage() {
                             const errorData = await response.json();
                             webix.message({
                               type: "error",
-                              text: errorData.detail || "Login failed",
+                              text: errorData.detail || "Username or password is incorrect.",
                             });
                             return;
                           }
@@ -86,6 +87,7 @@ export function loginPage() {
 
                           $$("loginLayout").destructor();
                           webix.ui(settingsPage(), $$("app"));
+                          loadSavedThemeSettings();
                           webix.once(() => {
                             addplaceholders?.();
                             setInitialValues?.();

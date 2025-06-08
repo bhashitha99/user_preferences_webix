@@ -24,17 +24,20 @@ function getTabHeader(iconClass, label) {
 
 function changeFontSize(size) {
   document.documentElement.style.setProperty("--user-font-size", size);
+  localStorage.setItem("userFontSize", size);
 }
+
 function changeFontFamily(fontName) {
   document.documentElement.style.setProperty("--user-font-family", fontName);
+  localStorage.setItem("userFontFamily", fontName);
 }
-function toggleContrastMode() {
-  document.body.classList.toggle("high-contrast");
 
-  // save preference
-  const enabled = document.body.classList.contains("high-contrast");
-  localStorage.setItem("highContrast", enabled);
+function toggleContrastMode() {
+  const isEnabled = document.body.classList.toggle("high-contrast");
+  localStorage.setItem("highContrast", isEnabled);
 }
+
+
 if (localStorage.getItem("highContrast") === "true") {
   document.body.classList.add("high-contrast");
 }
@@ -42,9 +45,20 @@ if (localStorage.getItem("highContrast") === "true") {
 function switchTheme(themeName) {
   const themeLink = document.getElementById("webix-theme");
   themeLink.href = `https://cdn.webix.com/edge/skins/${themeName}.css`;
-
-  // Also update skin if needed (optional for Webix v8+)
   webix.skin.set(themeName);
+  localStorage.setItem("webixTheme", themeName);
+}
+
+export function loadSavedThemeSettings() {
+  const savedTheme = localStorage.getItem("webixTheme");
+  const savedFontSize = localStorage.getItem("userFontSize");
+  const savedFontFamily = localStorage.getItem("userFontFamily");
+  const contrastEnabled = localStorage.getItem("highContrast") === "true";
+
+  if (savedTheme) switchTheme(savedTheme);
+  if (savedFontSize) changeFontSize(savedFontSize);
+  if (savedFontFamily) changeFontFamily(savedFontFamily);
+  if (contrastEnabled) document.body.classList.add("high-contrast");
 }
 
 export function getThemeSettingsTab() {
