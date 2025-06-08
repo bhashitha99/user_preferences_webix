@@ -46,10 +46,9 @@ A customizable **User Preferences Page** built using **Webix** (Frontend) and **
 
 ```bash
 git clone https://github.com/bhashitha99/user_preferences_webix.git
-cd user_preferences_webix
 
 ```
-#### Setup Backend (Django)
+#### Terminal 1: Setup Backend (Django)
 
 ```bash
 cd backend
@@ -65,7 +64,7 @@ Add your frontend URL (e.g., http://localhost:5173) to FRONTEND_URL
 python manage.py migrate
 python manage.py runserver
 ```
-#### Setup Frontend
+#### Terminal 2: Frontend Setup Frontend
 ````bash
 cd ../frontend
 npm install
@@ -75,6 +74,7 @@ Rename .EXAMPLE to .env in the frontend folder
 Add your backend URL (e.g., http://localhost:8000) to VITE_API_URL
 ### Run the App
 ```bash
+npm install
 npm run dev
 ```
 
