@@ -142,9 +142,9 @@ notificationFields.forEach((field) => {
         $$(field).define("placeholder", notificationSettings[field]);
         $$(field).refresh();
         $$(field).setValue(notificationSettings[field]);
-        $$(field).define("readonly", true);
       }
-    });
+    }
+  );
 
   const privacyFields = [
     "profileVisibility",
@@ -164,7 +164,6 @@ privacyFields.forEach((field) => {
         $$(field).define("placeholder", privacysttings[field]);
         $$(field).refresh();
         $$(field).setValue(privacysttings[field]);
-        $$(field).define("readonly", true);
       }
     });
 

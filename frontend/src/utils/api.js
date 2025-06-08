@@ -24,6 +24,7 @@ export async function sendUpdate(url, data, options = {}) {
 
 export async function saveFormData(url, data) {
   console.log("Saving url:", url);
+  console.log("Data to save:", data);
   const response = await fetch(url, {
     method: "PUT", 
     headers: {

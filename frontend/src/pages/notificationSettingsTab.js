@@ -44,21 +44,43 @@ const notificationInitialValues = {
   notificationVolume: 70,
   enableSoundAlerts: 1,
   dndMode: 0,
-  dndFrom: "",
-  dndTo: "",
+  // dndFrom: "",
+  // dndTo: "",
 };
+export async function reloadNotificationSettings() {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const notificationSettings = await fetchData(`${API_URL}/api/notification-settings/`);
+
+  const notificationFields = [
+    "meetingReminders", "timesheetReminders", "projectUpdates", "teamMentions", "reaveRequestStatus",
+    "taskAssignments", "announcementUpdates", "emailAlerts", "smsAlerts", "pushNotifications",
+    "browserNotifications", "desktopNotifications", "notificationSound", "notificationVolume",
+    "enableSoundAlerts", "dndMode"
+  ];
+
+  notificationFields.forEach((field) => {
+    if ($$(field)) {
+      const view = $$(field).config.view;
+      $$(field).setValue(notificationSettings[field]);
+
+      // Only set readonly for supported views
+      if (!["switch", "slider", "checkbox"].includes(view)) {
+        $$(field).define("readonly", true);
+      }
+      $$(field).refresh();
+    }
+  });
+
+  // Show or hide DND time range based on current value
+  if (notificationSettings["dndMode"] === 1) {
+    $$("dndTimeRange")?.show();
+  } else {
+    $$("dndTimeRange")?.hide();
+  }
+}
+
 
 export function getNotificationSettingsTab() {
-  function loadNotificationSettings() {
-  fetchData(`${API_URL}/api/notification-settings/`)
-    .then((data) => {
-      $$("notificationForm").setValues(data);
-    })
-    .catch((err) => {
-      webix.message({ type: "error", text: "Failed to load notification settings" });
-      console.error(err);
-    });
-}
 
   const tab= {
     header: getTabHeader("fas fa-solid fa-bell", "Notification Settings"),
@@ -242,39 +264,39 @@ export function getNotificationSettingsTab() {
                           id: "dndMode",
                           value: 0,
                           labelWidth: 200,
-                          on: {
-                            onChange: function (newValue) {
-                              if (newValue === 1) {
-                                $$("dndTimeRange").show();
-                              } else {
-                                $$("dndTimeRange").hide();
-                              }
-                            },
-                          },
+                          // on: {
+                          //   onChange: function (newValue) {
+                          //     if (newValue === 1) {
+                          //       $$("dndTimeRange").show();
+                          //     } else {
+                          //       $$("dndTimeRange").hide();
+                          //     }
+                          //   },
+                          // },
                         },
-                        {
-                          id: "dndTimeRange",
-                          hidden: true,
-                          rows: [
-                            boxWithoutEditPermission(
-                              "From",
-                              "dndFrom",
-                              "timepicker",
-                              "",
-                              100,
-                              200
-                            ),
-                            boxWithoutEditPermission(
-                              "To",
-                              "dndTo",
-                              "timepicker",
-                              "",
-                              100,
-                              200
-                            ),
-                            {},
-                          ],
-                        },
+                        // {
+                        //   id: "dndTimeRange",
+                        //   hidden: true,
+                        //   rows: [
+                        //     boxWithoutEditPermission(
+                        //       "From",
+                        //       "dndFrom",
+                        //       "timepicker",
+                        //       "",
+                        //       100,
+                        //       200
+                        //     ),
+                        //     boxWithoutEditPermission(
+                        //       "To",
+                        //       "dndTo",
+                        //       "timepicker",
+                        //       "",
+                        //       100,
+                        //       200
+                        //     ),
+                        //     {},
+                        //   ],
+                        // },
                       ],
                     },
                   ],
@@ -297,21 +319,15 @@ export function getNotificationSettingsTab() {
                       cancel: "Cancel",
                       callback: function (result) {
                         if (result) {
-                          // 1. Set default values on the form
-                          $$("notificationForm").setValues(
-                            notificationInitialValues
-                          );
-
-                          // 2. Save them to backend
                           saveFormData(
                             `${API_URL}/api/notification-settings/`,
-                            "notificationForm"
+                            notificationInitialValues
                           )
                             .then(() => {
                               webix.message(
                                 "Settings have been reset and saved."
                               );
-                              loadNotificationSettings();
+                              reloadNotificationSettings();
                             })
                             .catch((err) => {
                               webix.message({
@@ -341,7 +357,7 @@ export function getNotificationSettingsTab() {
                         if (result) {
                           saveFormData(
                             `${API_URL}/api/notification-settings/`,
-                            "notificationForm"
+                            $$("notificationForm").getValues()
                           )
                             .then(() => {
                               webix.message(
@@ -367,8 +383,5 @@ export function getNotificationSettingsTab() {
     },
   };
 
-  webix.once(() => {
-    loadNotificationSettings();
-  });
  return tab;
 }

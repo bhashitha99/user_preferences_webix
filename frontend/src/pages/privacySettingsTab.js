@@ -2,9 +2,30 @@ import "../styles/settings.css";
 import { sendUpdate } from "../utils/api.js";
 import { isValidPassword, isValidEmail } from "../utils/validations.js";
 import { boxWithEditPermission,boxWithoutEditPermission,editpassword } from "../components/formFields.js";
+import { saveFormData, fetchData } from "../utils/api.js";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function isMobile() {
   return window.innerWidth < 768;
+}
+
+export async function reloadPrivacySettings() {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const privacySettings = await fetchData(`${API_URL}/api/privacy-settings/`);
+
+  const privacyFields = [
+    "profileVisibility", "profilePictureVisibility", "contactVisibility", "requestConnection",
+    "followConnection", "suggestionsConnection", "messagePermission", "mentionPermission",
+    "discoverableData", "activeStatusData", "lastSeenData"
+  ];
+
+  privacyFields.forEach((field) => {
+    if ($$(field)) {
+      $$(field).setValue(privacySettings[field]);
+      $$(field).refresh();
+    }
+  });
 }
 
 
@@ -29,23 +50,11 @@ function responsiveLayout(items) {
   }
 }
 
-export async function saveFormData(formId, url, validateFn) {
-  const form = $$(formId);
-  const values = form.getValues();
-  console.log("Form values to save:", values);
-  // Validate if validation function is provided
-  if (validateFn && !validateFn(values)) {
-    return Promise.reject("Validation failed");
-  }
-  // Send the data to backend
-  return sendUpdate(url, values);
-}
 
-function setInitialPrivacyValues() {
-  $$("privacyForm").setValues({
+const privacyInitialValues= {
     profileVisibility: "friends",
     profilePictureVisibility: "friends",
-    contactVisibility: "private",
+    contactVisibility: "only_me",
     requestConnection: "everyone",
     followConnection: "everyone",
     suggestionsConnection: "friends",
@@ -54,7 +63,6 @@ function setInitialPrivacyValues() {
     discoverableData: 1,
     activeStatusData: 1,
     lastSeenData: "friends",
-  });
 }
 
 
@@ -82,17 +90,17 @@ export function getPrivacySettingsTab() {
                 boxWithoutEditPermission("Who can view your full profile", "profileVisibility", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
                 boxWithoutEditPermission("Who can see your profile picture", "profilePictureVisibility", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
                 boxWithoutEditPermission("Who can see your contact info", "contactVisibility", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
               ]},{
                 height: 200,
@@ -105,17 +113,17 @@ export function getPrivacySettingsTab() {
                 boxWithoutEditPermission("Who can send you connection requests", "requestConnection", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
                 boxWithoutEditPermission("Who can follow you", "followConnection", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
                 boxWithoutEditPermission("Allow connection suggestions", "suggestionsConnection", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
               ]},   
             ])
@@ -132,12 +140,12 @@ export function getPrivacySettingsTab() {
                 boxWithoutEditPermission("Who can message you", "messagePermission", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
                 boxWithoutEditPermission("Allow group mentions", "mentionPermission", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
               ]},{
                 height: 200,
@@ -152,7 +160,7 @@ export function getPrivacySettingsTab() {
                 boxWithoutEditPermission("who can see your last active time", "lastSeenData", "select", [
                                 { id: "everyone", value: "Everyone" },
                                 { id: "friends", value: "Friends Only" },
-                                { id: "private", value: "Only Me" }
+                                { id: "only_me", value: "Only Me" }
                             ], 300,200),
               ]},   
             ])
@@ -173,9 +181,11 @@ export function getPrivacySettingsTab() {
                       text: "Are you sure you want to reset all privacy settings?",
                       callback: function(result) {
                         if (result) {
-                          // Clear or reset to default values
-                          // $$("privacyForm").clear();
-                          setInitialPrivacyValues(); // if you use a default-values function
+                          saveFormData(
+                            `${API_URL}/api/privacy-settings/`,
+                            privacyInitialValues
+                          )
+                          reloadPrivacySettings();
                           webix.message("Privacy settings reset.");
                         }
                       }
@@ -196,7 +206,9 @@ export function getPrivacySettingsTab() {
                       text: "Are you sure you want to save these privacy settings?",
                       callback: function(result) {
                         if (result) {
-                          saveFormData("privacyForm", "http://localhost:8000/api/user/privacy")
+                          saveFormData(
+                            `${API_URL}/api/privacy-settings/`,
+                            $$("privacyForm").getValues())
                             .then(() => {
                               webix.message("Privacy settings saved successfully!");
                             })
