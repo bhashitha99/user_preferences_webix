@@ -6,25 +6,10 @@ import {
   boxWithoutEditPermission,
   editpassword,
 } from "../components/formFields.js";
+import { getTabHeader,responsiveLayout } from "../utils/responsiveUtil.js";
+import { API_URL } from "../config/config.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
-function isMobile() {
-  return window.innerWidth < 768;
-}
-
-function getTabHeader(iconClass, label) {
-  if (isMobile()) {
-    return `<span class='webix_icon ${iconClass}'></span>`;
-  } else {
-    return `<span class='webix_icon ${iconClass}'></span> ${label}`;
-  }
-}
-
-// Responsive layout
-function responsiveLayout(items) {
-  return isMobile() ? { rows: items } : { cols: items };
-}
 
 // Function to save form data
 export async function saveFormData(formId, url, validateFn) {
