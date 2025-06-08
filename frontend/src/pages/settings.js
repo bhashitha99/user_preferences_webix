@@ -11,6 +11,7 @@ import { getNotificationSettingsTab } from "./notificationSettingsTab.js";
 import { getPrivacySettingsTab } from "./privacySettingsTab.js";
 import { getThemeSettingsTab } from "./themeSettingsTab.js";
 import { navbar } from "../components/navbar.js";
+import { fetchData } from "../utils/api.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -80,18 +81,18 @@ export function settingsPage() {
 
 async function loadProfileData() {
   const token = localStorage.getItem("authToken");
-  console.log("Loading profile with token:", token);
   const response = await fetch(`${API_URL}/api/profile/`, {
     headers: {
       Authorization: `Token ${token}`,
       "Content-Type": "application/json",
     },
   });
+  const notificationSettings = await fetchData(`${API_URL}/api/notification-settings/`)
+  const privacysttings = await fetchData(`${API_URL}/api/privacy-settings/`)
 
   if (response.ok) {
     const profile = await response.json();
-    console.log("User profile:", profile);
-
+  
     const fields = [
       "firstname",
       "lastname",
@@ -114,7 +115,60 @@ async function loadProfileData() {
         $$(field).define("readonly", true);
       }
     });
+
+    const notificationFields = [
+    "meetingReminders",
+    "timesheetReminders",
+    "projectUpdates",
+    "teamMentions",
+    "reaveRequestStatus",
+    "taskAssignments",
+    "announcementUpdates",
+    "emailAlerts",
+    "smsAlerts",
+    "pushNotifications",
+    "browserNotifications",
+    "desktopNotifications",
+    "notificationSound",
+    "notificationVolume",
+    "enableSoundAlerts",
+    "dndMode",
+    "dndFrom",
+    "dndTo"
+]
+
+notificationFields.forEach((field) => {
+      if ($$(field)) {
+        $$(field).define("placeholder", notificationSettings[field]);
+        $$(field).refresh();
+        $$(field).setValue(notificationSettings[field]);
+        $$(field).define("readonly", true);
+      }
+    });
+
+  const privacyFields = [
+    "profileVisibility",
+    "profilePictureVisibility",
+    "contactVisibility",
+    "requestConnection",
+    "followConnection",
+    "suggestionsConnection",
+    "messagePermission",
+    "mentionPermission",
+    "lastSeenData",
+    "discoverableData",
+    "activeStatusData"
+]
+privacyFields.forEach((field) => {
+      if ($$(field)) {
+        $$(field).define("placeholder", privacysttings[field]);
+        $$(field).refresh();
+        $$(field).setValue(privacysttings[field]);
+        $$(field).define("readonly", true);
+      }
+    });
+
   } else {
-    console.error("Failed to load profile");
+    console.error("Failed to load saved data");
   }
 }

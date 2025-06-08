@@ -1,3 +1,4 @@
+const token = localStorage.getItem("authToken");
 export async function sendUpdate(url, data, options = {}) {
   try {
     const response = await fetch(url, {
@@ -18,4 +19,31 @@ export async function sendUpdate(url, data, options = {}) {
   } catch (error) {
     throw error;
   }
+}
+
+
+export async function saveFormData(url, data) {
+  console.log("Saving url:", url);
+  const response = await fetch(url, {
+    method: "PUT", 
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) throw new Error(await response.text());
+  return response.json();
+}
+
+export async function fetchData(url) {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json",
+      Authorization: `Token ${token}`
+     }
+  });
+  if (!response.ok) throw new Error(`GET failed with status ${response.status}`);
+  return await response.json();
 }
