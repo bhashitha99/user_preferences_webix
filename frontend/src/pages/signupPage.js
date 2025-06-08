@@ -1,7 +1,61 @@
 import { loginPage } from "./loginPage.js";
 import "../styles/login.css";
+import { API_URL } from "../config/config.js";
+import { isValidEmail,isValidPasswordRegistation } from "../utils/validations.js"; 
 
-const API_URL = import.meta.env.VITE_API_URL;
+
+// Function to save form data
+export async function saveFormRegistationData( ) {
+  const form = $$("signupForm");
+  const values = form.getValues();
+  const payload = {
+    firstname: values.firstname,
+    lastname: values.lastname,
+    email: values.email,
+    password: values.password,
+  };
+
+  if (!isValidEmail(values)) {
+    return Promise.reject("Invalid Email");
+  }
+  if (!isValidPasswordRegistation(values)) {
+    return Promise.reject("Invalid password format. Password must be at least 8 characters.");
+  }
+    try {
+      const response = await fetch(`${API_URL}/api/register/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+    
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Signup error:", errorData.email);
+        webix.message({
+          type: "error",
+          text: errorData.email || "Registration failed.",
+        });
+        return;
+      }
+      webix.message("Registration successful! Please log in.");
+      $$("signupLayout").destructor();
+      loginPage();
+    
+  } catch (err) {
+    console.error("Signup error:", err);
+    webix.message({
+      type: "error",
+      text: "Server error. Please try again.",
+    });
+  }
+
+
+  return response.json();
+}
+
+
 
 export function signupPage() {
   webix.ui({
@@ -70,45 +124,7 @@ export function signupPage() {
                     value: "Register",
                     css: "webix_primary",
                     click: async () => {
-                      const form = $$("signupForm");
-                      if (form.validate()) {
-                        const values = form.getValues();
-                        const payload = {
-                          firstname: values.firstname,
-                          lastname: values.lastname,
-                          email: values.email,
-                          password: values.password,
-                        };
-
-                        try {
-                          const response = await fetch(`${API_URL}/api/register/`, {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(payload),
-                          });
-
-                          if (!response.ok) {
-                            const errorData = await response.json();
-                            webix.message({
-                              type: "error",
-                              text: errorData.detail || "Registration failed.",
-                            });
-                            return;
-                          }
-
-                          webix.message("Registration successful! Please log in.");
-                          $$("signupLayout").destructor();
-                          loginPage();
-                        } catch (err) {
-                          console.error("Signup error:", err);
-                          webix.message({
-                            type: "error",
-                            text: "Server error. Please try again.",
-                          });
-                        }
-                      }
+                      saveFormRegistationData();
                     },
                   },
                   {

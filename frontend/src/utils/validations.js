@@ -36,3 +36,21 @@ export function isValidPassword(values) {
 
     return result;
 }
+
+
+export function isValidPasswordRegistation(values) {
+  const password = values.password;
+  
+  // const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  const re = /^\d{8,}$/;
+  const password_validation_result = re.test(password);
+  if(!password_validation_result){
+    webix.message({
+      type: "error",
+      text: "Invalid password format. Password must be at least 8 characters.",
+    });
+  }
+
+
+    return password_validation_result;
+}
