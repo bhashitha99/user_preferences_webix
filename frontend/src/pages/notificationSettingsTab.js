@@ -1,52 +1,11 @@
 import "../styles/settings.css";
-import { sendUpdate } from "../utils/api.js";
-import {
-  boxWithEditPermission,
-  boxWithoutEditPermission,
-  editpassword,
-} from "../components/formFields.js";
+import {boxWithoutEditPermission} from "../components/formFields.js";
 import { saveFormData, fetchData } from "../utils/api.js";
+import { API_URL } from "../config/config.js";
+import { responsiveLayout,getTabHeader } from "../utils/responsiveUtil.js";
+import {notificationInitialValues} from "../config/initialValues.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
-function isMobile() {
-  return window.innerWidth < 768;
-}
-
-// Responsive layout
-function responsiveLayout(items) {
-  return isMobile() ? { rows: items } : { cols: items };
-}
-
-function getTabHeader(iconClass, label) {
-  if (isMobile()) {
-    return `<span class='webix_icon ${iconClass}'></span>`;
-  } else {
-    return `<span class='webix_icon ${iconClass}'></span> ${label}`;
-  }
-}
-const notificationInitialValues = {
-  meetingReminders: 0,
-  timesheetReminders: 0,
-  projectUpdates: 1,
-  teamMentions: 1,
-  reaveRequestStatus: 1,
-  taskAssignments: 1,
-  announcementUpdates: 0,
-
-  emailAlerts: 1,
-  smsAlerts: 0,
-  pushNotifications: 1,
-  browserNotifications: 1,
-  desktopNotifications: 0,
-
-  notificationSound: "default",
-  notificationVolume: 70,
-  enableSoundAlerts: 1,
-  dndMode: 0,
-  // dndFrom: "",
-  // dndTo: "",
-};
 export async function reloadNotificationSettings() {
   const API_URL = import.meta.env.VITE_API_URL;
   const notificationSettings = await fetchData(`${API_URL}/api/notification-settings/`);
@@ -70,13 +29,6 @@ export async function reloadNotificationSettings() {
       $$(field).refresh();
     }
   });
-
-  // Show or hide DND time range based on current value
-  if (notificationSettings["dndMode"] === 1) {
-    $$("dndTimeRange")?.show();
-  } else {
-    $$("dndTimeRange")?.hide();
-  }
 }
 
 
@@ -264,39 +216,7 @@ export function getNotificationSettingsTab() {
                           id: "dndMode",
                           value: 0,
                           labelWidth: 200,
-                          // on: {
-                          //   onChange: function (newValue) {
-                          //     if (newValue === 1) {
-                          //       $$("dndTimeRange").show();
-                          //     } else {
-                          //       $$("dndTimeRange").hide();
-                          //     }
-                          //   },
-                          // },
                         },
-                        // {
-                        //   id: "dndTimeRange",
-                        //   hidden: true,
-                        //   rows: [
-                        //     boxWithoutEditPermission(
-                        //       "From",
-                        //       "dndFrom",
-                        //       "timepicker",
-                        //       "",
-                        //       100,
-                        //       200
-                        //     ),
-                        //     boxWithoutEditPermission(
-                        //       "To",
-                        //       "dndTo",
-                        //       "timepicker",
-                        //       "",
-                        //       100,
-                        //       200
-                        //     ),
-                        //     {},
-                        //   ],
-                        // },
                       ],
                     },
                   ],
@@ -341,7 +261,6 @@ export function getNotificationSettingsTab() {
                   },
                 },
 
-                // {},
                 {
                   view: "button",
                   value: "Save Changes",

@@ -1,4 +1,4 @@
-const token = localStorage.getItem("authToken");
+
 
 export async function sendUpdate(url, data, options = {}) {
   try {
@@ -26,6 +26,7 @@ export async function sendUpdate(url, data, options = {}) {
 export async function saveFormData(url, data) {
   console.log("Saving url:", url);
   console.log("Data to save:", data);
+  const token = localStorage.getItem("authToken");
   const response = await fetch(url, {
     method: "PUT", 
     headers: {
@@ -40,6 +41,7 @@ export async function saveFormData(url, data) {
 }
 
 export async function fetchData(url) {
+  const token = localStorage.getItem("authToken");
   const response = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json",

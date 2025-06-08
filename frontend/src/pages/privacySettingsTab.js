@@ -1,14 +1,10 @@
 import "../styles/settings.css";
-import { sendUpdate } from "../utils/api.js";
-import { isValidPassword, isValidEmail } from "../utils/validations.js";
-import { boxWithEditPermission,boxWithoutEditPermission,editpassword } from "../components/formFields.js";
+import { boxWithoutEditPermission } from "../components/formFields.js";
 import { saveFormData, fetchData } from "../utils/api.js";
+import { getTabHeader,privacyResponsiveLayout } from "../utils/responsiveUtil.js";
+import { API_URL } from "../config/config.js";
+import {privacyInitialValues} from "../config/initialValues.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-function isMobile() {
-  return window.innerWidth < 768;
-}
 
 export async function reloadPrivacySettings() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -29,44 +25,6 @@ export async function reloadPrivacySettings() {
 }
 
 
-function getTabHeader(iconClass, label) {
-  if (isMobile()) {
-    return `<span class='webix_icon ${iconClass}'></span>`;
-  } else {
-    return `<span class='webix_icon ${iconClass}'></span> ${label}`;
-  }
-}
-
-// Responsive layout
-function responsiveLayout(items) {
-  if (window.innerWidth < 1050){
-    return { rows: items };
-  }
-  else if (window.innerWidth < 768) {
-    return { rows: items };
-  }
-  else {
-    return { cols: items };
-  }
-}
-
-
-const privacyInitialValues= {
-    profileVisibility: "friends",
-    profilePictureVisibility: "friends",
-    contactVisibility: "only_me",
-    requestConnection: "everyone",
-    followConnection: "everyone",
-    suggestionsConnection: "friends",
-    messagePermission: "friends",
-    mentionPermission: "everyone",
-    discoverableData: 1,
-    activeStatusData: 1,
-    lastSeenData: "friends",
-}
-
-
-
 
 export function getPrivacySettingsTab() {
   return {
@@ -79,7 +37,7 @@ export function getPrivacySettingsTab() {
         { rows: [
           
           {
-            ...responsiveLayout([
+            ...privacyResponsiveLayout([
             { height: 200,
               rows:[
               {view: "template", 
@@ -129,7 +87,7 @@ export function getPrivacySettingsTab() {
             ])
           },
           {
-            ...responsiveLayout([
+            ...privacyResponsiveLayout([
             { height: 200,
               rows:[
               {view: "template", 

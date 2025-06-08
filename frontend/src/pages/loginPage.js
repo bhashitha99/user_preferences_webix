@@ -2,8 +2,8 @@ import { settingsPage } from "./settings.js";
 import { signupPage } from "./signupPage.js";
 import "../styles/login.css";
 import { loadSavedThemeSettings } from "../pages/themeSettingsTab.js";
+import { API_URL } from "../config/config.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 export function loginPage() {
   webix.ui({
@@ -39,7 +39,7 @@ export function loginPage() {
                 view: "text",
                 name: "username",
                 label: "",
-                
+                placeholder: "Email",
                 css: "form-input",
               },
               {

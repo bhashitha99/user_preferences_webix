@@ -1,52 +1,16 @@
 import "../styles/settings.css";
-import { sendUpdate } from "../utils/api.js";
 import {
-  boxWithEditPermission,
-  boxWithoutEditPermission,
-  editpassword,
-} from "../components/formFields.js";
+  changeFontSize,
+  changeFontFamily,
+  toggleContrastMode,
+  switchTheme
+} from "../utils/themeUtil.js";
+import { getTabHeader, responsiveLayout } from "../utils/responsiveUtil.js";
 
-function isMobile() {
-  return window.innerWidth < 768;
-}
-
-function responsiveLayout(items) {
-  return isMobile() ? { rows: items } : { cols: items };
-}
-
-function getTabHeader(iconClass, label) {
-  if (isMobile()) {
-    return `<span class='webix_icon ${iconClass}'></span>`;
-  } else {
-    return `<span class='webix_icon ${iconClass}'></span> ${label}`;
-  }
-}
-
-function changeFontSize(size) {
-  document.documentElement.style.setProperty("--user-font-size", size);
-  localStorage.setItem("userFontSize", size);
-}
-
-function changeFontFamily(fontName) {
-  document.documentElement.style.setProperty("--user-font-family", fontName);
-  localStorage.setItem("userFontFamily", fontName);
-}
-
-function toggleContrastMode() {
-  const isEnabled = document.body.classList.toggle("high-contrast");
-  localStorage.setItem("highContrast", isEnabled);
-}
 
 
 if (localStorage.getItem("highContrast") === "true") {
   document.body.classList.add("high-contrast");
-}
-
-function switchTheme(themeName) {
-  const themeLink = document.getElementById("webix-theme");
-  themeLink.href = `https://cdn.webix.com/edge/skins/${themeName}.css`;
-  webix.skin.set(themeName);
-  localStorage.setItem("webixTheme", themeName);
 }
 
 export function loadSavedThemeSettings() {
